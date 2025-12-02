@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header bg-warning text-white">
+                <h4 class="mb-0">✏️ Actualizar Producto</h4>
+            </div>
+            <div class="card-body">
+                {% if producto %}
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Nombre del Producto:</label>
+                            <input type="text" class="form-control" name="nombre" value="{{ producto.nombre }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Categoría:</label>
+                            <select class="form-select" name="categoria" required>
+                                <option value="SALA" {% if producto.categoria == 'SALA' %}selected{% endif %}>Sala</option>
+                                <option value="COMEDOR" {% if producto.categoria == 'COMEDOR' %}selected{% endif %}>Comedor</option>
+                                <option value="RECAMARA" {% if producto.categoria == 'RECAMARA' %}selected{% endif %}>Recámara</option>
+                                <option value="OFICINA" {% if producto.categoria == 'OFICINA' %}selected{% endif %}>Oficina</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Material:</label>
+                            <select class="form-select" name="material" required>
+                                <option value="MADERA" {% if producto.material == 'MADERA' %}selected{% endif %}>Madera</option>
+                                <option value="METAL" {% if producto.material == 'METAL' %}selected{% endif %}>Metal</option>
+                                <option value="PLASTICO" {% if producto.material == 'PLASTICO' %}selected{% endif %}>Plástico</option>
+                                <option value="VIDRIO" {% if producto.material == 'VIDRIO' %}selected{% endif %}>Vidrio</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Color:</label>
+                            <input type="text" class="form-control" name="color" value="{{ producto.color }}" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Precio:</label>
+                            <input type="number" step="0.01" class="form-control" name="precio" value="{{ producto.precio }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Stock:</label>
+                            <input type="number" class="form-control" name="stock" value="{{ producto.stock }}" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Sucursales Disponibles (Selección múltiple):</label>
+                            <select class="form-select" name="sucursales" multiple required>
+                                {% for sucursal in sucursales %}
+                                <option value="{{ sucursal.id_sucursal }}" 
+                                    {% for prod_suc in producto_sucursales %}
+                                        {% if prod_suc.id_sucursal == sucursal.id_sucursal %}selected{% endif %}
+                                    {% endfor %}>
+                                    Sucursal {{ sucursal.num_sucursal }} - {{ sucursal.ciudad }} ({{ sucursal.encargado }})
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <small class="form-text text-muted">Mantén presionada la tecla Ctrl para seleccionar múltiples sucursales</small>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-success me-md-2">Actualizar Producto</button>
+                        <a href="{% url 'ver_producto' %}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+                {% else %}
+                <div class="alert alert-info">
+                    <h5>Selecciona un producto para actualizar</h5>
+                    <p>Ve a la lista de productos y haz clic en "Editar" para actualizar la información.</p>
+                    <a href="{% url 'ver_producto' %}" class="btn btn-primary">Ver Lista de Productos</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

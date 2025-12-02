@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">🏢 Agregar Nueva Sucursal</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Número de Sucursal:</label>
+                            <input type="number" class="form-control" name="num_sucursal" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Encargado:</label>
+                            <input type="text" class="form-control" name="encargado" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Teléfono:</label>
+                            <input type="text" class="form-control" name="telefono" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Ciudad:</label>
+                            <input type="text" class="form-control" name="ciudad" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Dirección:</label>
+                            <textarea class="form-control" name="direccion" rows="3" required></textarea>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Código Postal:</label>
+                            <input type="text" class="form-control" name="codigo_postal" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Empleado Asociado:</label>
+                            <select class="form-select" name="id_empleado" required>
+                                <option value="">Seleccionar empleado</option>
+                                {% for empleado in empleados %}
+                                <option value="{{ empleado.id_empleado }}">{{ empleado.nombre }} - {{ empleado.cargo }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-success me-md-2">Guardar Sucursal</button>
+                        <a href="{% url 'ver_sucursal' %}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
