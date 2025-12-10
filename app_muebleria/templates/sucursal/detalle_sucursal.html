@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">🏢 Detalle de la Sucursal</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Información de la Sucursal</h5>
+                        <p><strong>ID:</strong> {{ sucursal.id_sucursal }}</p>
+                        <p><strong>Número de Sucursal:</strong> {{ sucursal.num_sucursal }}</p>
+                        <p><strong>Ciudad:</strong> {{ sucursal.ciudad }}</p>
+                        <p><strong>Encargado:</strong> {{ sucursal.encargado }}</p>
+                        <p><strong>Teléfono:</strong> {{ sucursal.telefono }}</p>
+                        <p><strong>Dirección:</strong> {{ sucursal.direccion }}</p>
+                        <p><strong>Código Postal:</strong> {{ sucursal.codigo_postal }}</p>
+                        <p><strong>Empleado Asociado:</strong> {{ sucursal.id_empleado.nombre }}</p>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h5>Productos Disponibles</h5>
+                        {% if productos %}
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Categoría</th>
+                                        <th>Precio</th>
+                                        <th>Stock</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for producto in productos %}
+                                    <tr>
+                                        <td>{{ producto.nombre }}</td>
+                                        <td>{{ producto.get_categoria_display }}</td>
+                                        <td>${{ producto.precio }}</td>
+                                        <td>{{ producto.stock }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <p class="text-muted">No hay productos disponibles en esta sucursal</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                    <a href="{% url 'ver_sucursal' %}" class="btn btn-secondary">Volver a Sucursales</a>
+                    <a href="{% url 'realizar_actualizacion_sucursal' sucursal.id_sucursal %}" class="btn btn-warning ms-2">✏️ Editar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

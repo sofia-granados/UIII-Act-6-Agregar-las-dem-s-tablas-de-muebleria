@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-gold text-white">
+                <h4 class="mb-0">💰 Nueva Venta</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" id="ventaForm">
+                    {% csrf_token %}
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header bg-light">
+                                    <h5 class="mb-0">📋 Información de la Venta</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label class="form-label">Cliente:</label>
+                                        <select class="form-select" name="id_cliente" required>
+                                            <option value="">Seleccionar cliente</option>
+                                            {% for cliente in clientes %}
+                                            <option value="{{ cliente.id_cliente }}">{{ cliente.nombre }} - {{ cliente.rfc }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Empleado:</label>
+                                        <select class="form-select" name="id_empleado" required>
+                                            <option value="">Seleccionar empleado</option>
+                                            {% for empleado in empleados %}
+                                            <option value="{{ empleado.id_empleado }}">{{ empleado.nombre }} - {{ empleado.cargo }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header bg-light">
+                                    <h5 class="mb-0">🛒 Productos Disponibles</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Producto</th>
+                                                    <th>Precio</th>
+                                                    <th>Stock</th>
+                                                    <th>Cantidad</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="productosBody">
+                                                {% for producto in productos %}
+                                                <tr>
+                                                    <td>{{ producto.nombre }}</td>
+                                                    <td>${{ producto.precio }}</td>
+                                                    <td>{{ producto.stock }}</td>
+                                                    <td>
+                                                        <input type="number" class="form-control form-control-sm cantidad" 
+                                                               name="cantidades[]" min="0" max="{{ producto.stock }}" 
+                                                               data-precio="{{ producto.precio }}" 
+                                                               onchange="calcularTotal()">
+                                                        <input type="hidden" name="productos[]" value="{{ producto.id_producto }}">
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="text-end">
+                                        Total: $<span id="totalVenta">0.00</span>
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                        <button type="submit" class="btn btn-success me-md-2">💳 Registrar Venta</button>
+                        <a href="{% url 'ver_venta' %}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function calcularTotal() {
+    let total = 0;
+    const cantidades = document.querySelectorAll('.cantidad');
+    
+    cantidades.forEach(input => {
+        const cantidad = parseInt(input.value) || 0;
+        const precio = parseFloat(input.dataset.precio) || 0;
+        total += cantidad * precio;
+    });
+    
+    document.getElementById('totalVenta').textContent = total.toFixed(2);
+}
+
+// Inicializar cálculo
+calcularTotal();
+</script>
+
+<style>
+    .bg-gold {
+        background-color: #ffc107 !important;
+        color: #000 !important;
+    }
+    .bg-gold h4 {
+        color: #000 !important;
+    }
+</style>
+{% endblock %}

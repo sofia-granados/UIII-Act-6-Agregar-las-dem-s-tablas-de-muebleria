@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">🗑️ Confirmar Eliminación</h4>
+            </div>
+            <div class="card-body text-center">
+                <div class="alert alert-warning">
+                    <h5>¿Estás seguro de que quieres eliminar a este empleado?</h5>
+                    <p class="mb-2"><strong>Nombre:</strong> {{ empleado.nombre }}</p>
+                    <p class="mb-2"><strong>Cargo:</strong> {{ empleado.get_cargo_display }}</p>
+                    <p class="mb-3"><strong>ID:</strong> {{ empleado.id_empleado }}</p>
+                    <p class="text-danger"><strong>⚠️ Esta acción no se puede deshacer</strong></p>
+                </div>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <button type="submit" class="btn btn-danger me-md-2">Sí, Eliminar</button>
+                        <a href="{% url 'ver_empleados' %}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

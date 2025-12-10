@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header bg-teal text-white">
+                <h4 class="mb-0">👤 Detalle del Cliente</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Información del Cliente</h5>
+                        <p><strong>ID:</strong> {{ cliente.id_cliente }}</p>
+                        <p><strong>Nombre:</strong> {{ cliente.nombre }}</p>
+                        <p><strong>Teléfono:</strong> {{ cliente.telefono }}</p>
+                        <p><strong>Correo:</strong> {{ cliente.correo }}</p>
+                        <p><strong>RFC:</strong> {{ cliente.rfc }}</p>
+                        <p><strong>Dirección:</strong> {{ cliente.direccion }}</p>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h5>Historial de Compras</h5>
+                        {% if ventas %}
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Venta ID</th>
+                                        <th>Fecha</th>
+                                        <th>Empleado</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for venta in ventas %}
+                                    <tr>
+                                        <td><a href="{% url 'detalle_venta' venta.id_venta %}">{{ venta.id_venta }}</a></td>
+                                        <td>{{ venta.fecha_venta|date:"d/m/Y" }}</td>
+                                        <td>{{ venta.id_empleado.nombre }}</td>
+                                        <td>${{ venta.total }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tfoot>
+                                    <tr class="table-success">
+                                        <td colspan="3" class="text-end"><strong>Total Gastado:</strong></td>
+                                        <!-- CAMBIADO: Usar total_gastado en lugar del filtro -->
+                                        <td><strong>${{ total_gastado }}</strong></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        {% else %}
+                        <p class="text-muted">No tiene compras registradas</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                    <a href="{% url 'ver_cliente' %}" class="btn btn-secondary">Volver a Clientes</a>
+                    <a href="{% url 'realizar_actualizacion_cliente' cliente.id_cliente %}" class="btn btn-warning ms-2">✏️ Editar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-teal {
+        background-color: #20c997 !important;
+    }
+</style>
+{% endblock %}

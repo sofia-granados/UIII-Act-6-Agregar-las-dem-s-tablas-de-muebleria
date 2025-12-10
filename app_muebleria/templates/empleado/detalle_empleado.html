@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">👥 Detalle del Empleado</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Información Personal</h5>
+                        <p><strong>ID:</strong> {{ empleado.id_empleado }}</p>
+                        <p><strong>Nombre:</strong> {{ empleado.nombre }}</p>
+                        <p><strong>Edad:</strong> {{ empleado.edad }} años</p>
+                        <p><strong>Cargo:</strong> {{ empleado.get_cargo_display }}</p>
+                        <p><strong>Teléfono:</strong> {{ empleado.telefono }}</p>
+                        <p><strong>Sueldo:</strong> ${{ empleado.sueldo }}</p>
+                        <p><strong>Fecha de Contratación:</strong> {{ empleado.fecha_contratacion }}</p>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h5>Sucursales Asignadas</h5>
+                        {% if sucursales %}
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th># Sucursal</th>
+                                        <th>Ciudad</th>
+                                        <th>Encargado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for sucursal in sucursales %}
+                                    <tr>
+                                        <td>{{ sucursal.num_sucursal }}</td>
+                                        <td>{{ sucursal.ciudad }}</td>
+                                        <td>{{ sucursal.encargado }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <p class="text-muted">No tiene sucursales asignadas</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                    <a href="{% url 'ver_empleados' %}" class="btn btn-secondary">Volver a Empleados</a>
+                    <a href="{% url 'realizar_actualizacion' empleado.id_empleado %}" class="btn btn-warning ms-2">✏️ Editar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

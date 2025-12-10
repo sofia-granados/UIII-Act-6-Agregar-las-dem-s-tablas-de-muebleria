@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header bg-purple text-white">
+                <h4 class="mb-0">🛋️ Agregar Nuevo Producto</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Nombre del Producto:</label>
+                            <input type="text" class="form-control" name="nombre" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Categoría:</label>
+                            <select class="form-select" name="categoria" required>
+                                <option value="">Seleccionar categoría</option>
+                                <option value="SALA">Sala</option>
+                                <option value="COMEDOR">Comedor</option>
+                                <option value="RECAMARA">Recámara</option>
+                                <option value="OFICINA">Oficina</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Material:</label>
+                            <select class="form-select" name="material" required>
+                                <option value="">Seleccionar material</option>
+                                <option value="MADERA">Madera</option>
+                                <option value="METAL">Metal</option>
+                                <option value="PLASTICO">Plástico</option>
+                                <option value="VIDRIO">Vidrio</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Color:</label>
+                            <input type="text" class="form-control" name="color" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Precio:</label>
+                            <input type="number" step="0.01" class="form-control" name="precio" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Stock:</label>
+                            <input type="number" class="form-control" name="stock" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Sucursales Disponibles (Selección múltiple):</label>
+                            <select class="form-select" name="sucursales" multiple required>
+                                {% for sucursal in sucursales %}
+                                <option value="{{ sucursal.id_sucursal }}">
+                                    Sucursal {{ sucursal.num_sucursal }} - {{ sucursal.ciudad }} ({{ sucursal.encargado }})
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <small class="form-text text-muted">Mantén presionada la tecla Ctrl para seleccionar múltiples sucursales</small>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-success me-md-2">Guardar Producto</button>
+                        <a href="{% url 'ver_producto' %}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-purple {
+        background-color: #6f42c1 !important;
+    }
+</style>
+{% endblock %}

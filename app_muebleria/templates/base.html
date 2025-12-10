@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Mueblería</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .main-content {
+            min-height: calc(100vh - 120px);
+            padding: 20px 0;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            color: #2c3e50 !important;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .btn-primary {
+            background-color: #3498db;
+            border-color: #3498db;
+        }
+        .btn-success {
+            background-color: #27ae60;
+            border-color: #27ae60;
+        }
+        .btn-warning {
+            background-color: #f39c12;
+            border-color: #f39c12;
+        }
+        .btn-danger {
+            background-color: #e74c3c;
+            border-color: #e74c3c;
+        }
+        .btn-info {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+        }
+        
+        /* Colores personalizados */
+        .bg-purple { background-color: #6f42c1 !important; }
+        .bg-teal { background-color: #20c997 !important; }
+        .bg-orange { background-color: #fd7e14 !important; }
+        .bg-gold { 
+            background-color: #ffc107 !important; 
+            color: #000 !important;
+        }
+        .bg-gold h4 { color: #000 !important; }
+        
+        .btn-purple { 
+            background-color: #6f42c1 !important;
+            border-color: #6f42c1 !important;
+            color: white !important;
+        }
+        .btn-teal { 
+            background-color: #20c997 !important;
+            border-color: #20c997 !important;
+            color: white !important;
+        }
+        .btn-orange { 
+            background-color: #fd7e14 !important;
+            border-color: #fd7e14 !important;
+            color: white !important;
+        }
+        .btn-gold { 
+            background-color: #ffc107 !important;
+            border-color: #ffc107 !important;
+            color: #000 !important;
+        }
+        
+        .badge {
+            margin: 1px;
+            font-size: 0.7em;
+        }
+        
+        .table th {
+            background-color: #2c3e50;
+            color: white;
+        }
+        
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    {% include 'header.html' %}
+    {% include 'navbar.html' %}
+    
+    <div class="container main-content">
+        {% block content %}
+        {% endblock %}
+    </div>
+    
+    {% include 'footer.html' %}
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    {% block extra_js %}
+    {% endblock %}
+</body>
+</html>

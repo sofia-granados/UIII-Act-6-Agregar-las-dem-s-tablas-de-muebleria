@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">🗑️ Confirmar Eliminación de Sucursal</h4>
+            </div>
+            <div class="card-body text-center">
+                <div class="alert alert-warning">
+                    <h5>¿Estás seguro de que quieres eliminar esta sucursal?</h5>
+                    <p class="mb-2"><strong>Sucursal:</strong> {{ sucursal.num_sucursal }}</p>
+                    <p class="mb-2"><strong>Ciudad:</strong> {{ sucursal.ciudad }}</p>
+                    <p class="mb-2"><strong>Encargado:</strong> {{ sucursal.encargado }}</p>
+                    <p class="mb-3"><strong>ID:</strong> {{ sucursal.id_sucursal }}</p>
+                    <p class="text-danger"><strong>⚠️ Esta acción no se puede deshacer</strong></p>
+                </div>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <button type="submit" class="btn btn-danger me-md-2">Sí, Eliminar</button>
+                        <a href="{% url 'ver_sucursal' %}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

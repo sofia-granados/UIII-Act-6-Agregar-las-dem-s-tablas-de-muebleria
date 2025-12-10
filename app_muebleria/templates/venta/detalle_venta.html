@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">📄 Detalle de Venta #{{ venta.id_venta }}</h4>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5>Información de la Venta</h5>
+                        <p><strong>Fecha:</strong> {{ venta.fecha_venta|date:"d/m/Y H:i" }}</p>
+                        <p><strong>Cliente:</strong> {{ venta.id_cliente.nombre }}</p>
+                        <p><strong>RFC:</strong> {{ venta.id_cliente.rfc }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Información del Empleado</h5>
+                        <p><strong>Empleado:</strong> {{ venta.id_empleado.nombre }}</p>
+                        <p><strong>Cargo:</strong> {{ venta.id_empleado.get_cargo_display }}</p>
+                        <p><strong>Total Venta:</strong> <span class="badge bg-success fs-5">${{ venta.total }}</span></p>
+                    </div>
+                </div>
+                
+                <h5>Productos Vendidos</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for detalle in detalles %}
+                            <tr>
+                                <td>{{ detalle.id_producto.nombre }}</td>
+                                <td>{{ detalle.cantidad }}</td>
+                                <td>${{ detalle.id_producto.precio }}</td>
+                                <td>${{ detalle.subtotal }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-success">
+                                <th colspan="3" class="text-end">Total:</th>
+                                <th>${{ venta.total }}</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                    <a href="{% url 'ver_venta' %}" class="btn btn-secondary">Volver a Ventas</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

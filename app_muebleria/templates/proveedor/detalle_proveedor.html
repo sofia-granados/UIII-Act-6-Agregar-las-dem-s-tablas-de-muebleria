@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header bg-orange text-white">
+                <h4 class="mb-0">🏭 Detalle del Proveedor</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Información del Proveedor</h5>
+                        <p><strong>ID:</strong> {{ proveedor.id_proveedor }}</p>
+                        <p><strong>Nombre:</strong> {{ proveedor.nombre }}</p>
+                        <p><strong>Teléfono:</strong> {{ proveedor.telefono }}</p>
+                        <p><strong>Correo:</strong> {{ proveedor.correo }}</p>
+                        <p><strong>Tipo de Producto:</strong> {{ proveedor.tipo_producto }}</p>
+                        <p><strong>Dirección:</strong> {{ proveedor.direccion }}</p>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h5>Productos que Suministra</h5>
+                        {% if productos %}
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Categoría</th>
+                                        <th>Material</th>
+                                        <th>Precio</th>
+                                        <th>Stock</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for producto in productos %}
+                                    <tr>
+                                        <td>{{ producto.nombre }}</td>
+                                        <td>{{ producto.get_categoria_display }}</td>
+                                        <td>{{ producto.get_material_display }}</td>
+                                        <td>${{ producto.precio }}</td>
+                                        <td>{{ producto.stock }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <p class="text-muted">No tiene productos asociados</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                    <a href="{% url 'ver_proveedor' %}" class="btn btn-secondary">Volver a Proveedores</a>
+                    <a href="{% url 'realizar_actualizacion_proveedor' proveedor.id_proveedor %}" class="btn btn-warning ms-2">✏️ Editar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-orange {
+        background-color: #fd7e14 !important;
+    }
+</style>
+{% endblock %}

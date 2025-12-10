@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-warning text-white">
+                <h4 class="mb-0">✏️ Actualizar Venta #{{ venta.id_venta }}</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" id="ventaForm">
+                    {% csrf_token %}
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header bg-light">
+                                    <h5 class="mb-0">📋 Información de la Venta</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label class="form-label">Cliente:</label>
+                                        <select class="form-select" name="id_cliente" required>
+                                            <option value="">Seleccionar cliente</option>
+                                            {% for cliente in clientes %}
+                                            <option value="{{ cliente.id_cliente }}" 
+                                                {% if cliente.id_cliente == venta.id_cliente.id_cliente %}selected{% endif %}>
+                                                {{ cliente.nombre }} - {{ cliente.rfc }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Empleado:</label>
+                                        <select class="form-select" name="id_empleado" required>
+                                            <option value="">Seleccionar empleado</option>
+                                            {% for empleado in empleados %}
+                                            <option value="{{ empleado.id_empleado }}"
+                                                {% if empleado.id_empleado == venta.id_empleado.id_empleado %}selected{% endif %}>
+                                                {{ empleado.nombre }} - {{ empleado.cargo }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="alert alert-info">
+                                        <small>
+                                            <strong>Fecha:</strong> {{ venta.fecha_venta|date:"d/m/Y H:i" }}<br>
+                                            <strong>Total Actual:</strong> ${{ venta.total }}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header bg-light">
+                                    <h5 class="mb-0">🛒 Productos de la Venta</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="productosContainer">
+                                        {% for detalle in detalles %}
+                                        <div class="row producto-row mb-2">
+                                            <div class="col-md-5">
+                                                <select class="form-select form-select-sm producto-select" name="productos[]" required>
+                                                    <option value="">Seleccionar producto</option>
+                                                    {% for producto in productos %}
+                                                    <option value="{{ producto.id_producto }}"
+                                                        {% if producto.id_producto == detalle.id_producto.id_producto %}selected{% endif %}
+                                                        data-stock="{{ producto.stock }}"
+                                                        data-precio="{{ producto.precio }}">
+                                                        {{ producto.nombre }} - ${{ producto.precio }} (Stock: {{ producto.stock }})
+                                                    </option>
+                                                    {% endfor %}
+                                                </select>
+                                                <input type="hidden" name="detalles_ids[]" value="{{ detalle.id_detalle }}">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="number" class="form-control form-control-sm cantidad" 
+                                                       name="cantidades[]" value="{{ detalle.cantidad }}" min="1" required
+                                                       onchange="calcularTotal()">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control form-control-sm subtotal" 
+                                                       value="${{ detalle.subtotal }}" readonly>
+                                            </div>
+                                            <div class="col-md-1">
+                                                <button type="button" class="btn btn-danger btn-sm quitar-producto" onclick="quitarProducto(this)">✕</button>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    
+                                    <button type="button" class="btn btn-success btn-sm mt-2" onclick="agregarProducto()">
+                                        ➕ Agregar Producto
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="text-end">
+                                        Total Actualizado: $<span id="totalVenta">{{ venta.total }}</span>
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-warning">
+                        <small>
+                            <strong>⚠️ Nota:</strong> Al actualizar los productos:
+                            <ul class="mb-0">
+                                <li>El stock se ajustará automáticamente</li>
+                                <li>Si eliminas un producto, su stock será restaurado</li>
+                                <li>Si agregas un producto nuevo, se reducirá su stock</li>
+                            </ul>
+                        </small>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                        <button type="submit" class="btn btn-success me-md-2">💾 Guardar Cambios</button>
+                        <a href="{% url 'detalle_venta' venta.id_venta %}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Template para nuevo producto
+const productoHTML = `
+<div class="row producto-row mb-2">
+    <div class="col-md-5">
+        <select class="form-select form-select-sm producto-select" name="productos[]" required onchange="actualizarStock(this)">
+            <option value="">Seleccionar producto</option>
+            {% for producto in productos %}
+            <option value="{{ producto.id_producto }}" 
+                data-stock="{{ producto.stock }}"
+                data-precio="{{ producto.precio }}">
+                {{ producto.nombre }} - ${{ producto.precio }} (Stock: {{ producto.stock }})
+            </option>
+            {% endfor %}
+        </select>
+        <input type="hidden" name="detalles_ids[]" value="new">
+    </div>
+    <div class="col-md-3">
+        <input type="number" class="form-control form-control-sm cantidad" 
+               name="cantidades[]" value="1" min="1" required 
+               onchange="calcularTotal()" max="0">
+        <small class="stock-display text-danger"></small>
+    </div>
+    <div class="col-md-3">
+        <input type="text" class="form-control form-control-sm subtotal" value="$0.00" readonly>
+    </div>
+    <div class="col-md-1">
+        <button type="button" class="btn btn-danger btn-sm quitar-producto" onclick="quitarProducto(this)">✕</button>
+    </div>
+</div>`;
+
+function agregarProducto() {
+    const container = document.getElementById('productosContainer');
+    const div = document.createElement('div');
+    div.innerHTML = productoHTML;
+    container.appendChild(div);
+    calcularTotal();
+}
+
+function quitarProducto(button) {
+    const row = button.closest('.producto-row');
+    row.remove();
+    calcularTotal();
+}
+
+function actualizarStock(select) {
+    const row = select.closest('.producto-row');
+    const stock = select.options[select.selectedIndex].dataset.stock || 0;
+    const precio = select.options[select.selectedIndex].dataset.precio || 0;
+    const cantidadInput = row.querySelector('.cantidad');
+    const stockDisplay = row.querySelector('.stock-display');
+    
+    cantidadInput.max = stock;
+    stockDisplay.textContent = `Stock: ${stock}`;
+    
+    // Si la cantidad actual es mayor que el stock disponible, ajustar
+    if (parseInt(cantidadInput.value) > parseInt(stock)) {
+        cantidadInput.value = stock;
+    }
+    
+    calcularTotal();
+}
+
+function calcularTotal() {
+    let total = 0;
+    const rows = document.querySelectorAll('.producto-row');
+    
+    rows.forEach(row => {
+        const select = row.querySelector('.producto-select');
+        const cantidadInput = row.querySelector('.cantidad');
+        const subtotalInput = row.querySelector('.subtotal');
+        
+        if (select.value && cantidadInput.value) {
+            const precio = parseFloat(select.options[select.selectedIndex].dataset.precio) || 0;
+            const cantidad = parseInt(cantidadInput.value) || 0;
+            const subtotal = precio * cantidad;
+            
+            subtotalInput.value = '$' + subtotal.toFixed(2);
+            total += subtotal;
+        }
+    });
+    
+    document.getElementById('totalVenta').textContent = total.toFixed(2);
+}
+
+// Inicializar cálculo
+calcularTotal();
+
+// Configurar eventos para productos existentes
+document.querySelectorAll('.producto-select').forEach(select => {
+    select.addEventListener('change', function() {
+        actualizarStock(this);
+    });
+    // Actualizar stock display para productos existentes
+    const row = select.closest('.producto-row');
+    const stock = select.options[select.selectedIndex].dataset.stock || 0;
+    const stockDisplay = row.querySelector('.stock-display');
+    if (stockDisplay) {
+        stockDisplay.textContent = `Stock: ${stock}`;
+    }
+});
+</script>
+
+<style>
+    .producto-row {
+        align-items: center;
+    }
+    .stock-display {
+        font-size: 0.75rem;
+        display: block;
+    }
+</style>
+{% endblock %}

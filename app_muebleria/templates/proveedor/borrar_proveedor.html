@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">🗑️ Confirmar Eliminación de Proveedor</h4>
+            </div>
+            <div class="card-body text-center">
+                <div class="alert alert-warning">
+                    <h5>¿Estás seguro de que quieres eliminar este proveedor?</h5>
+                    <p class="mb-2"><strong>Proveedor:</strong> {{ proveedor.nombre }}</p>
+                    <p class="mb-2"><strong>Tipo Producto:</strong> {{ proveedor.tipo_producto }}</p>
+                    <p class="mb-2"><strong>Correo:</strong> {{ proveedor.correo }}</p>
+                    <p class="mb-3"><strong>ID:</strong> {{ proveedor.id_proveedor }}</p>
+                    
+                    {% if proveedor.productos.all %}
+                    <div class="alert alert-danger mt-3">
+                        <h6>⚠️ Advertencia:</h6>
+                        <p>Este proveedor tiene {{ proveedor.productos.count }} producto(s) asociado(s):</p>
+                        <ul class="text-start">
+                            {% for producto in proveedor.productos.all %}
+                            <li>{{ producto.nombre }} - ${{ producto.precio }}</li>
+                            {% endfor %}
+                        </ul>
+                        <p class="mb-0"><strong>No podrás eliminar el proveedor hasta que elimines o reasignes estos productos.</strong></p>
+                    </div>
+                    {% endif %}
+                    
+                    <p class="text-danger mt-3"><strong>⚠️ Esta acción no se puede deshacer</strong></p>
+                </div>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        {% if not proveedor.productos.all %}
+                        <button type="submit" class="btn btn-danger me-md-2">Sí, Eliminar</button>
+                        {% else %}
+                        <button type="button" class="btn btn-danger me-md-2" disabled>No se puede eliminar (tiene productos)</button>
+                        {% endif %}
+                        <a href="{% url 'detalle_proveedor' proveedor.id_proveedor %}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

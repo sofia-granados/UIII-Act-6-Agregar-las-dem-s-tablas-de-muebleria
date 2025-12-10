@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header bg-warning text-white">
+                <h4 class="mb-0">✏️ Actualizar Sucursal</h4>
+            </div>
+            <div class="card-body">
+                {% if sucursal %}
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Número de Sucursal:</label>
+                            <input type="number" class="form-control" name="num_sucursal" value="{{ sucursal.num_sucursal }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Encargado:</label>
+                            <input type="text" class="form-control" name="encargado" value="{{ sucursal.encargado }}" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Teléfono:</label>
+                            <input type="text" class="form-control" name="telefono" value="{{ sucursal.telefono }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Ciudad:</label>
+                            <input type="text" class="form-control" name="ciudad" value="{{ sucursal.ciudad }}" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Dirección:</label>
+                            <textarea class="form-control" name="direccion" rows="3" required>{{ sucursal.direccion }}</textarea>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Código Postal:</label>
+                            <input type="text" class="form-control" name="codigo_postal" value="{{ sucursal.codigo_postal }}" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Empleado Asociado:</label>
+                            <select class="form-select" name="id_empleado" required>
+                                <option value="">Seleccionar empleado</option>
+                                {% for empleado in empleados %}
+                                <option value="{{ empleado.id_empleado }}" 
+                                    {% if empleado.id_empleado == sucursal.id_empleado.id_empleado %}selected{% endif %}>
+                                    {{ empleado.nombre }} - {{ empleado.cargo }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-success me-md-2">Actualizar Sucursal</button>
+                        <a href="{% url 'ver_sucursal' %}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+                {% else %}
+                <div class="alert alert-info">
+                    <h5>Selecciona una sucursal para actualizar</h5>
+                    <p>Ve a la lista de sucursales y haz clic en "Editar" para actualizar la información.</p>
+                    <a href="{% url 'ver_sucursal' %}" class="btn btn-primary">Ver Lista de Sucursales</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

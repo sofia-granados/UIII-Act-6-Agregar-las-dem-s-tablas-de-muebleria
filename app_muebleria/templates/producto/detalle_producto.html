@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header bg-purple text-white">
+                <h4 class="mb-0">🛋️ Detalle del Producto</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Información del Producto</h5>
+                        <p><strong>ID:</strong> {{ producto.id_producto }}</p>
+                        <p><strong>Nombre:</strong> {{ producto.nombre }}</p>
+                        <p><strong>Categoría:</strong> {{ producto.get_categoria_display }}</p>
+                        <p><strong>Material:</strong> {{ producto.get_material_display }}</p>
+                        <p><strong>Color:</strong> {{ producto.color }}</p>
+                        <p><strong>Precio:</strong> ${{ producto.precio }}</p>
+                        <p><strong>Stock:</strong> {{ producto.stock }} unidades</p>
+                        {% if producto.id_proveedor %}
+                        <p><strong>Proveedor:</strong> {{ producto.id_proveedor.nombre }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h5>Sucursales Disponibles</h5>
+                        {% if sucursales %}
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th># Sucursal</th>
+                                        <th>Ciudad</th>
+                                        <th>Encargado</th>
+                                        <th>Teléfono</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for sucursal in sucursales %}
+                                    <tr>
+                                        <td>{{ sucursal.num_sucursal }}</td>
+                                        <td>{{ sucursal.ciudad }}</td>
+                                        <td>{{ sucursal.encargado }}</td>
+                                        <td>{{ sucursal.telefono }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <p class="text-muted">No disponible en ninguna sucursal</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                    <a href="{% url 'ver_producto' %}" class="btn btn-secondary">Volver a Productos</a>
+                    <a href="{% url 'realizar_actualizacion_producto' producto.id_producto %}" class="btn btn-warning ms-2">✏️ Editar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-purple {
+        background-color: #6f42c1 !important;
+    }
+</style>
+{% endblock %}

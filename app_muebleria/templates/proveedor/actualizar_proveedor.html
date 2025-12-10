@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-warning text-white">
+                <h4 class="mb-0">✏️ Actualizar Proveedor</h4>
+            </div>
+            <div class="card-body">
+                {% if proveedor %}
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Nombre:</label>
+                            <input type="text" class="form-control" name="nombre" value="{{ proveedor.nombre }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Teléfono:</label>
+                            <input type="text" class="form-control" name="telefono" value="{{ proveedor.telefono }}" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Correo Electrónico:</label>
+                            <input type="email" class="form-control" name="correo" value="{{ proveedor.correo }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Tipo de Producto:</label>
+                            <input type="text" class="form-control" name="tipo_producto" value="{{ proveedor.tipo_producto }}" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Dirección:</label>
+                            <textarea class="form-control" name="direccion" rows="3" required>{{ proveedor.direccion }}</textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-success me-md-2">Actualizar Proveedor</button>
+                        <a href="{% url 'ver_proveedor' %}" class="btn btn-secondary">Cancelar</a>
+                    </div>
+                </form>
+                {% else %}
+                <div class="alert alert-info">
+                    <h5>Selecciona un proveedor para actualizar</h5>
+                    <p>Ve a la lista de proveedores y haz clic en "Editar" para actualizar la información.</p>
+                    <a href="{% url 'ver_proveedor' %}" class="btn btn-primary">Ver Lista de Proveedores</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
